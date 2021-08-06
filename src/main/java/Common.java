@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 public class Common {
     static long trayTimeForMessage = 6000;
-    static String[] devProdValues = new String[countLines(Main.configPath) - 5];
+    String[] devProdValues = new String[countLines(Main.configPath) - 5];
 
     // Считывание всех строк из файла в двумерный массив строк
     static String[][] getConfig() {
@@ -42,7 +42,7 @@ public class Common {
     }
 
     // Запись сред разработки в комбобокс
-    static void addEnv(){
+    void addEnv(){
         int rowsCount = countLines(Main.configPath) - 5;
         String [][] config = getConfig();
 
@@ -82,7 +82,7 @@ public class Common {
     }
 
     // Уведомление в трее
-    static void trayMessage() {
+    void trayMessage() {
         if (SystemTray.isSupported()) {
             PopupMenu popup = new PopupMenu();
             MenuItem exitItem = new MenuItem("Close");
@@ -143,7 +143,7 @@ public class Common {
     }
 
     // Анимация поиска в таблице лога
-    static void Searching(AtomicBoolean isSearchFinished) {
+     void Searching(AtomicBoolean isSearchFinished) {
         Thread thr = new Thread(() -> {
             while (!isSearchFinished.get()) {
                 try {
@@ -340,7 +340,7 @@ public class Common {
     }
 
     // Считывание всех строк из файла в массив строк
-    static String[] getLinesFromFile(int linesAmount) {
+    String[] getLinesFromFile(int linesAmount) {
         String[] lines = new String[linesAmount];
 
         try (BufferedReader reader = new BufferedReader(
@@ -471,12 +471,12 @@ public class Common {
     }
 
     // Проверка является ли текст цифрой
-    static boolean isDigit(String s) {
+    boolean isDigit(String s) {
         return s.matches("[-+]?\\d+");
     }
 
     // Получить номер дисплея на котором находится приложение
-    static int getDisplay(Gui gui) {
+    int getDisplay(Gui gui) {
         GraphicsConfiguration config = gui.getGraphicsConfiguration();
         GraphicsDevice myScreen = config.getDevice();
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -494,7 +494,7 @@ public class Common {
     }
 
     //Конвертация клавиш
-    static String convert(String message) {
+    String convert(String message) {
         message = message.toLowerCase(Locale.ROOT);
         boolean result = message.matches(".*\\p{InCyrillic}.*");
         char[] ru = {'й','ц','у','к','е','н','г','ш','щ','з','х','ъ','ф','ы','в','а','п','р','о','л','д','ж','э', 'я','ч', 'с','м','и','т','ь','б', 'ю','.'};

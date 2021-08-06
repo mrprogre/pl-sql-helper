@@ -76,7 +76,7 @@ public class Gui extends JFrame implements ActionListener {
         // Загрузка данных из файла config.txt
         Common.getConfig();
         // Запись сред разработки в комбобокс
-        Common.addEnv();
+        common.addEnv();
 
         // получаем ширину экрана
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -344,7 +344,7 @@ public class Gui extends JFrame implements ActionListener {
         devProd.setBounds(22, 36, 57, 20);
         devProd.setFont(new Font("Tahoma", Font.BOLD, 12));
         devProd.setEditable(false);
-        devProd.setModel(new DefaultComboBoxModel<>(Common.devProdValues));
+        devProd.setModel(new DefaultComboBoxModel<>(common.devProdValues));
         devProd.setBackground(new Color(220, 255, 252));
         getContentPane().add(devProd);
 
@@ -481,12 +481,12 @@ public class Gui extends JFrame implements ActionListener {
         iataCodeTxt.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (Common.isDigit(iataCodeTxt.getText())) {
+                    if (common.isDigit(iataCodeTxt.getText())) {
                         iataResultLbl.setText(oracle.getAirport(Integer.parseInt(iataCodeTxt.getText())));
                     } else {
                         if (iataCodeTxt.getText().matches(".*\\p{InCyrillic}.*")) {
-                            iataResultLbl.setText(oracle.getAirport(Common.convert(iataCodeTxt.getText())));
-                            iataCodeTxt.setText(Common.convert(iataCodeTxt.getText()));
+                            iataResultLbl.setText(oracle.getAirport(common.convert(iataCodeTxt.getText())));
+                            iataCodeTxt.setText(common.convert(iataCodeTxt.getText()));
                         } else {
                             iataResultLbl.setText(oracle.getAirport(iataCodeTxt.getText()));
                         }
@@ -598,7 +598,7 @@ public class Gui extends JFrame implements ActionListener {
         starBtn.addActionListener(e -> {
             if (tableNamesBox.getItemCount() > 0 && !isAddToFavorites) {
                 int rowsCount = Common.countLines(Main.favoritesTabPath);
-                String[] favTab = Common.getLinesFromFile(rowsCount);
+                String[] favTab = common.getLinesFromFile(rowsCount);
                 String tabName = (String) tableNamesBox.getSelectedItem();
 
                 for (int i = 0; i < rowsCount; i++) {
@@ -894,7 +894,7 @@ public class Gui extends JFrame implements ActionListener {
         hideShowBtn.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(this.getClass().getResource("icons/down.png"))));
         hideShowBtn.setFont(fontStyle);
         hideShowBtn.addItemListener(e -> {
-            int displayNumber = Common.getDisplay(this);
+            int displayNumber = common.getDisplay(this);
             if (displayNumber == 1) {
                 if (hideShowBtn.isSelected()) {
                     setBounds(941, 447, guiWindowWidth, guiWindowHeight + 212);

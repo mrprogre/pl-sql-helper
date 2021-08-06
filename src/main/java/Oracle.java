@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Oracle {
+    Common common = new Common();
     static Connection connect;
     static AtomicBoolean isStop = new AtomicBoolean(false);
     static boolean isConnectedToVPN = false;
@@ -141,11 +142,11 @@ public class Oracle {
                         isSearchFinished.set(true);
 
                         if ((Gui.model.getRowCount() > modelRowCount) && Gui.isGuiInTray.get()) {
-                            Common.trayMessage();
+                            common.trayMessage();
                         }
                     }
                 } else {
-                    Common.Searching(isSearchFinished);
+                    common.Searching(isSearchFinished);
                     String sqlQuery = Gui.JStatement.getText() + " " + logTableFromConfig + " " + Gui.textWhereClause.getText();
                     PreparedStatement st = connect.prepareStatement(sqlQuery);
                     //System.out.println("2 " + sqlQuery);
@@ -365,6 +366,7 @@ public class Oracle {
         return result;
     }
 
+    // страна по коду
     String getAirport(int pAirpId) {
         String result = "";
         if (isConnectedToVPN) {

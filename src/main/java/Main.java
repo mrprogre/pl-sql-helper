@@ -21,9 +21,9 @@ public class Main {
             if (!directory.exists()) directory.mkdirs();
             if (!fav_file.exists()) fav_file.createNewFile();
             if (!log_file.exists()) log_file.createNewFile();
-            if (!config_file.exists()) config_file.createNewFile();
-
-
+            if (!config_file.exists()) {
+                Common.copyFiles(Main.class.getResource("config.txt"), directoryPath + "config.txt");
+            }
 
             // запись лога в файл
             Handler handler = new FileHandler(logPath, true);
