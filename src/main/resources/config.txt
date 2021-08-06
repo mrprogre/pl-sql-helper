@@ -1,0 +1,9 @@
+oracle.jdbc.driver.OracleDriver;
+log_table=;
+column_id=;
+column_date=;
+column_text=;
+dev;   jdbc:oracle:thin:@0.0.0.0:0000/oracle;  USER;  PASSWORD;
+test;  jdbc:oracle:thin:@0.0.0.0:0000/oracle;  USER;  PASSWORD;
+prod;  jdbc:oracle:thin:@0.0.0.0:0000/oracle;  USER;  PASSWORD;
+frod;  jdbc:oracle:thin:@0.0.0.0:0000/oracle;  USER;  PASSWORD;

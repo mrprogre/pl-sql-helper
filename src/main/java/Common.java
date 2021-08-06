@@ -1,8 +1,6 @@
 import org.apache.tika.Tika;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.io.*;
 import java.net.URL;
@@ -13,7 +11,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Blob;
 import java.sql.Clob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -22,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.awt.event.FocusEvent;
 import java.util.stream.Stream;
 
-public class Common extends Gui {
+public class Common {
     static long trayTimeForMessage = 6000;
     static String[] devProdValues = new String[countLines(Main.configPath) - 5];
 
@@ -85,7 +82,7 @@ public class Common extends Gui {
     }
 
     // Уведомление в трее
-    static void trayMessage(String pMessage) {
+    static void trayMessage() {
         if (SystemTray.isSupported()) {
             PopupMenu popup = new PopupMenu();
             MenuItem exitItem = new MenuItem("Close");
@@ -99,7 +96,7 @@ public class Common extends Gui {
             } catch (AWTException e) {
                 e.printStackTrace();
             }
-            trayIcon.displayMessage("PL/SQL monitor", pMessage, TrayIcon.MessageType.INFO);
+            trayIcon.displayMessage("PL/SQL monitor", "new line found", TrayIcon.MessageType.INFO);
             try {
                 Thread.sleep(trayTimeForMessage);
                 systemTray.remove(trayIcon);
@@ -114,33 +111,33 @@ public class Common extends Gui {
     // добавляем название таблиц в комбобокс после подключения к конкретной среде
     static void addItemsToCombobox() {
         for (int i = 0; i < Oracle.user_tables.size(); i++) {
-            tableNamesBox.addItem(Oracle.user_tables.get(i));
+            Gui.tableNamesBox.addItem(Oracle.user_tables.get(i));
         }
     }
 
     // добавляем название избранных таблиц в комбобокс
-    static void addItemsToFavCombobox() {
+    void addItemsToFavCombobox() {
         int rowsCount;
-        if (isSelectFavouriteTab && Oracle.isConnectedToVPN) {
-            if (tableNamesBox.getItemCount() > 0) tableNamesBox.removeAllItems();
+        if (Gui.isSelectFavouriteTab && Oracle.isConnectedToVPN) {
+            if (Gui.tableNamesBox.getItemCount() > 0) Gui.tableNamesBox.removeAllItems();
             rowsCount = Common.countLines(Main.favoritesTabPath);
             String[][] favoriteTabNames = Common.getLinesFromFile2(rowsCount);
-            String env = (String) devProd.getSelectedItem();
+            String env = (String) Gui.devProd.getSelectedItem();
 
             for (String[] f : favoriteTabNames) {
                 for (int j = 0; j < 1; j++) {
                     assert env != null;
                     if (env.equals("dev") && f[1].equals("dev")) {
-                        tableNamesBox.addItem(f[0]);
+                        Gui.tableNamesBox.addItem(f[0]);
                     } else if (env.equals("test") && f[1].equals("test")) {
-                        tableNamesBox.addItem(f[0]);
+                        Gui.tableNamesBox.addItem(f[0]);
                     } else if (env.equals("prod") && f[1].equals("prod")) {
-                        tableNamesBox.addItem(f[0]);
+                        Gui.tableNamesBox.addItem(f[0]);
                     }
                 }
             }
         } else {
-            if (tableNamesBox.getItemCount() > 0) tableNamesBox.removeAllItems();
+            if (Gui.tableNamesBox.getItemCount() > 0) Gui.tableNamesBox.removeAllItems();
             Common.addItemsToCombobox();
         }
     }
@@ -153,22 +150,22 @@ public class Common extends Gui {
                     if (isSearchFinished.get()) {
                         return;
                     }
-                    statusLbl.setText("searching");
+                    Gui.statusLbl.setText("searching");
                     Thread.sleep(500L);
                     if (isSearchFinished.get()) {
                         return;
                     }
-                    statusLbl.setText("searching.");
+                    Gui.statusLbl.setText("searching.");
                     Thread.sleep(500L);
                     if (isSearchFinished.get()) {
                         return;
                     }
-                    statusLbl.setText("searching..");
+                    Gui.statusLbl.setText("searching..");
                     Thread.sleep(500L);
                     if (isSearchFinished.get()) {
                         return;
                     }
-                    statusLbl.setText("searching.");
+                    Gui.statusLbl.setText("searching.");
                     Thread.sleep(500L);
                     if (isSearchFinished.get()) {
                         return;
@@ -328,13 +325,11 @@ public class Common extends Gui {
             BufferedReader breader;
             final int BUFFER_SIZE = 4096;
             breader = new BufferedReader(p_clob.getCharacterStream());
-            int length = -1;
-            long size = 0;
+            int length;
             char[] buf = new char[BUFFER_SIZE];
 
             while ((length = breader.read(buf, 0, BUFFER_SIZE)) != -1) {
                 file_writer.write(buf, 0, length);
-                size += length;
             }
             breader.close();
             file_writer.close();
@@ -427,27 +422,27 @@ public class Common extends Gui {
     static void isTabInFavorites() {
         int rowsCount = Common.countLines(Main.favoritesTabPath);
         String[][] favTab = Common.getLinesFromFile2(rowsCount);
-        String tabName = (String) tableNamesBox.getSelectedItem();
-        String env = (String) devProd.getSelectedItem();
+        String tabName = (String) Gui.tableNamesBox.getSelectedItem();
+        String env = (String) Gui.devProd.getSelectedItem();
 
         for (int i = 0; i < rowsCount; i++) {
             if (favTab[i][0].equals(tabName) && Objects.equals(env, "dev") && favTab[i][1].equals("dev")) {
-                starBtn.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Common.class.getResource("icons/yes.png"))));
-                isAddToFavorites = true;
+                Gui.starBtn.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Common.class.getResource("icons/yes.png"))));
+                Gui.isAddToFavorites = true;
             } else if (favTab[i][0].equals(tabName) && Objects.equals(env, "test") && favTab[i][1].equals("test")) {
-                starBtn.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Common.class.getResource("icons/yes.png"))));
-                isAddToFavorites = true;
+                Gui.starBtn.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Common.class.getResource("icons/yes.png"))));
+                Gui.isAddToFavorites = true;
             } else if (favTab[i][0].equals(tabName) && Objects.equals(env, "prod") && favTab[i][1].equals("prod")) {
-                starBtn.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Common.class.getResource("icons/yes.png"))));
-                isAddToFavorites = true;
-            } else isAddToFavorites = false;
+                Gui.starBtn.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Common.class.getResource("icons/yes.png"))));
+                Gui.isAddToFavorites = true;
+            } else Gui.isAddToFavorites = false;
         }
     }
 
     // Удаление таблицы из избранного
-    static void delTabFromFavorites() throws IOException {
-        String tabName = (String) tableNamesBox.getSelectedItem();
-        String env = (String) devProd.getSelectedItem();
+    void delTabFromFavorites() throws IOException {
+        String tabName = (String) Gui.tableNamesBox.getSelectedItem();
+        String env = (String) Gui.devProd.getSelectedItem();
 
         Path input = Paths.get(Main.favoritesTabPath);
         Path temp = Files.createTempFile("temp", ".txt");
@@ -469,7 +464,7 @@ public class Common extends Gui {
         }
         Files.move(temp, input, StandardCopyOption.REPLACE_EXISTING);
 
-        if (favouriteTabCheckBox.getState()) {
+        if (Gui.favouriteTabCheckBox.getState()) {
             addItemsToFavCombobox();
         }
         isTabInFavorites();

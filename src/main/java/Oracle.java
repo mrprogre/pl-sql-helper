@@ -7,37 +7,37 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Oracle {
+    static Connection connect;
     static AtomicBoolean isStop = new AtomicBoolean(false);
     static boolean isConnectedToVPN = false;
-    static AtomicBoolean isSearchFinished;
-    static Connection connect;
-    static double searchTime;
-    static double timeStart;
-    static int amount;
-    static int max;
-    static int max2;
     static String column_name;
     static ArrayList<String> user_tables = new ArrayList<>();
     static ArrayList<String> headers = new ArrayList<>();
-    static int column_count;
-    static int columnCount;
-    static String data_type;
-    static int data_type_count;
     static ArrayList<String> types = new ArrayList<>();
     static ArrayList<Integer> colLengths = new ArrayList<>();
     static Set<String> blobs = new LinkedHashSet<>();
     static ArrayList<String> row_ids = new ArrayList<>();
     static boolean isSelectOrGoFinished;
+    AtomicBoolean isSearchFinished;
+    double searchTime;
+    double timeStart;
+    int amount;
+    int max;
+    int max2;
+    int column_count;
+    int columnCount;
+    int data_type_count;
+    String data_type;
     //config.txt
     static String[][] config = Common.getConfig();
-    static String driver = config[0][0];
+    String driver = config[0][0];
     static String logTableFromConfig = config[1][0].replace("log_table=", "");
-    static String column_id = config[2][0].replace("column_id=", "");
-    static String column_date = config[3][0].replace("column_date=", "");
-    static String column_text = config[4][0].replace("column_text=", "");
+    String column_id = config[2][0].replace("column_id=", "");
+    String column_date = config[3][0].replace("column_date=", "");
+    String column_text = config[4][0].replace("column_text=", "");
             
     // открытие соединения
-    static void open() {
+    void open() {
         try {
             int index = Gui.devProd.getSelectedIndex() + 5;
             Class.forName(driver);
@@ -74,7 +74,7 @@ public class Oracle {
     }
 
     // закрытие соединения
-    static void close() {
+    void close() {
         try {
             if (isConnectedToVPN) connect.close();
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class Oracle {
     }
 
     // выборка данных из лога
-    static void select() {
+    void select() {
         int modelRowCount = Gui.model.getRowCount();
 
         try {
@@ -141,7 +141,7 @@ public class Oracle {
                         isSearchFinished.set(true);
 
                         if ((Gui.model.getRowCount() > modelRowCount) && Gui.isGuiInTray.get()) {
-                            Common.trayMessage("new line found");
+                            Common.trayMessage();
                         }
                     }
                 } else {
@@ -185,7 +185,7 @@ public class Oracle {
     }
 
     //Список всех таблиц текущего пользователя
-    static void getUserTables() {
+    void getUserTables() {
         try {
             PreparedStatement st = connect.prepareStatement("SELECT table_name FROM user_tables ORDER BY table_name");
             ResultSet rs = st.executeQuery();
@@ -201,7 +201,7 @@ public class Oracle {
     }
 
     // Анализ данных на уникальность
-    static synchronized void selectUniqueItems() {
+    synchronized void selectUniqueItems() {
         double selectivity;
         try {
             List<String> columns = new ArrayList<>();
@@ -251,7 +251,7 @@ public class Oracle {
     }
 
     // Выборка имён столбцов и их типов
-    static synchronized void tableInfo() {
+    synchronized void tableInfo() {
         try {
             if (headers.size() > 0) headers.clear();
             if (types.size() > 0) types.clear();
@@ -280,7 +280,7 @@ public class Oracle {
     }
 
     // Селект из выбранной таблицы
-    static synchronized void selectFromTable() {
+    synchronized void selectFromTable() {
         try {
             if (isConnectedToVPN) {
                 PreparedStatement st = connect.prepareStatement("SELECT t.*, t.rowid FROM " + Gui.tableNamesBox.getSelectedItem()
@@ -338,7 +338,7 @@ public class Oracle {
     }
 
     // аэропорт по коду
-    static String getAirport(String pIata) {
+    String getAirport(String pIata) {
         String result = "";
         if (isConnectedToVPN) {
             try {
@@ -365,7 +365,7 @@ public class Oracle {
         return result;
     }
 
-    static String getAirport(int pAirpId) {
+    String getAirport(int pAirpId) {
         String result = "";
         if (isConnectedToVPN) {
             try {

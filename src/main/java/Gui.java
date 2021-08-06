@@ -17,6 +17,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.table.*;
 
 public class Gui extends JFrame implements ActionListener {
+    Themes themes = new Themes();
+    Common common = new Common();
+    Oracle oracle = new Oracle();
     static JTable table;
     static DefaultTableModel model;
     static JLabel JStatement = new JLabel("SELECT * FROM " + Oracle.logTableFromConfig);
@@ -115,7 +118,7 @@ public class Gui extends JFrame implements ActionListener {
             @Override
             public void windowClosing(WindowEvent e) {
                 Main.LOGGER.log(Level.INFO, "Приложение закрыто");
-                if (Oracle.isConnectedToVPN) Oracle.close();
+                if (Oracle.isConnectedToVPN) oracle.close();
             }
 
             // сворачивание в трей
@@ -162,7 +165,8 @@ public class Gui extends JFrame implements ActionListener {
         //Listener
         connectionBtn.addActionListener((e) -> {
             try {
-                new Thread(Oracle::open).start();
+                Oracle oracle = new Oracle();
+                new Thread(oracle::open).start();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -173,25 +177,25 @@ public class Gui extends JFrame implements ActionListener {
                         "AND fl_text not like '%отправк%' " +
                         "AND fl_text not like '%остоянн%'");
                 this.getContentPane().setBackground(new Color(0x789FBB));
-                Themes.themeFontColors("Gray");
+                themes.themeFontColors("Gray");
                 //prod
             } else if (Gui.devProd.getSelectedIndex() == 2) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
                         "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xF9ABAB));
-                Themes.themeFontColors("Pink");
+                themes.themeFontColors("Pink");
                 //akr
             } else if (Gui.devProd.getSelectedIndex() == 3) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
                         "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xADE9B4));
-                Themes.themeFontColors("Green");
+                themes.themeFontColors("Green");
                 //dev
             } else {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
                         "AND fl_text LIKE '%sabre%'");
                 this.getContentPane().setBackground(new Color(0x789FBB));
-                Themes.themeFontColors("Gray");
+                themes.themeFontColors("Gray");
 
             }
 
@@ -200,7 +204,7 @@ public class Gui extends JFrame implements ActionListener {
                 if (Oracle.user_tables.size() > 0) Oracle.user_tables.clear();
                 if (tableNamesBox.getItemCount() > 0) tableNamesBox.removeAllItems();
                 if (model.getColumnCount() > 0) model.setRowCount(0);
-                Oracle.close();
+                oracle.close();
             }
             favouriteTabCheckBox.setState(false);
         });
@@ -218,28 +222,28 @@ public class Gui extends JFrame implements ActionListener {
             Object theme = Gui.guiTheme.getSelectedItem();
             if ("Dos".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0x0100AB));
-                Themes.themeFontColors("Dos");
+                themes.themeFontColors("Dos");
             } else if ("Black".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0x000000));
-                Themes.themeFontColors("Black");
+                themes.themeFontColors("Black");
             } else if ("Orange".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0xFFB273));
-                Themes.themeFontColors("Orange");
+                themes.themeFontColors("Orange");
             } else if ("Green".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0xADE9B4));
-                Themes.themeFontColors("Green");
+                themes.themeFontColors("Green");
             } else if ("Brown".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0xDBDBB5));
-                Themes.themeFontColors("Green");
+                themes.themeFontColors("Green");
             } else if ("Blue".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0x8DB1E6));
-                Themes.themeFontColors("Blue");
+                themes.themeFontColors("Blue");
             } else if ("Gray".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0x789FBB));
-                Themes.themeFontColors("Gray");
+                themes.themeFontColors("Gray");
             } else if ("Pink".equals(theme)) {
                 this.getContentPane().setBackground(new Color(0xF9ABAB));
-                Themes.themeFontColors("Pink");
+                themes.themeFontColors("Pink");
             }
             this.getContentPane().setLayout(null);
         });
@@ -363,13 +367,13 @@ public class Gui extends JFrame implements ActionListener {
             statusLbl.setText("");
             if (model.getColumnCount() > 0) model.setRowCount(0);
             if (!isSelect && !Oracle.isStop.get()) {
-                (new Thread(Oracle::select)).start();
+                (new Thread(oracle::select)).start();
             }
             if (!isRun) {
                 (new Thread(() -> {
                     while (isSelect && !Oracle.isStop.get()) {
                         Oracle.isStop.set(false);
-                        Oracle.select();
+                        oracle.select();
                         if (isSelect && !Oracle.isStop.get()) {
                             statusLbl.setText("");
                         }
@@ -392,7 +396,7 @@ public class Gui extends JFrame implements ActionListener {
         stopBtn.addActionListener((e) -> {
             try {
                 Oracle.isStop.set(true);
-                Oracle.isSearchFinished.set(true);
+                oracle.isSearchFinished.set(true);
                 Common.notification("stopped");
                 isRun = false;
             } catch (Exception var2) {
@@ -428,7 +432,8 @@ public class Gui extends JFrame implements ActionListener {
         //Listener
         exportBtn.addActionListener((e) -> {
             if (model.getRowCount() != 0) {
-                (new Thread(ExportLogIntoExcel::exportToExcel)).start();
+                ExportLogIntoExcel xls = new ExportLogIntoExcel();
+                (new Thread(xls::exportToExcel)).start();
                 Common.notification("exporting to excel");
             } else {
                 Common.notification("no data to export");
@@ -477,13 +482,13 @@ public class Gui extends JFrame implements ActionListener {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (Common.isDigit(iataCodeTxt.getText())) {
-                        iataResultLbl.setText(Oracle.getAirport(Integer.parseInt(iataCodeTxt.getText())));
+                        iataResultLbl.setText(oracle.getAirport(Integer.parseInt(iataCodeTxt.getText())));
                     } else {
                         if (iataCodeTxt.getText().matches(".*\\p{InCyrillic}.*")) {
-                            iataResultLbl.setText(Oracle.getAirport(Common.convert(iataCodeTxt.getText())));
+                            iataResultLbl.setText(oracle.getAirport(Common.convert(iataCodeTxt.getText())));
                             iataCodeTxt.setText(Common.convert(iataCodeTxt.getText()));
                         } else {
-                            iataResultLbl.setText(Oracle.getAirport(iataCodeTxt.getText()));
+                            iataResultLbl.setText(oracle.getAirport(iataCodeTxt.getText()));
                         }
                     }
                 }
@@ -563,7 +568,7 @@ public class Gui extends JFrame implements ActionListener {
         //Listener
         favouriteTabCheckBox.addItemListener((e) -> {
             isSelectFavouriteTab = favouriteTabCheckBox.getState();
-            Common.addItemsToFavCombobox();
+            common.addItemsToFavCombobox();
         });
 
         // Список всех таблиц в комбобоксе
@@ -630,7 +635,7 @@ public class Gui extends JFrame implements ActionListener {
                 //if (e.getClickCount() == 2) { // двойной клик
                 if (e.getButton() == MouseEvent.BUTTON3) { // клик правой кнопкой мыши
                     try {
-                        Common.delTabFromFavorites();
+                        common.delTabFromFavorites();
                         Common.isTabInFavorites();
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
@@ -788,7 +793,7 @@ public class Gui extends JFrame implements ActionListener {
         // Результат селекта выбранной таблицы
         selectFromTableBtn.addActionListener(e -> {
             if (tableNamesBox.getItemCount() != 0) {
-                Oracle.tableInfo();
+                oracle.tableInfo();
                 //Main.headers.add("ROWID");
                 lblWhere.setText("SELECT * FROM " + tableNamesBox.getSelectedItem());
                 executeModel = new DefaultTableModel(new Object[][]{
@@ -857,7 +862,7 @@ public class Gui extends JFrame implements ActionListener {
                 Oracle.isStop.set(false);
                 statusLbl.setText("");
                 if (!Oracle.isStop.get()) {
-                    new Thread(Oracle::selectFromTable).start();
+                    new Thread(oracle::selectFromTable).start();
                     new Thread(Gui::fill).start();
                     progressBar.setForeground(Color.YELLOW);
                 }
@@ -953,15 +958,15 @@ public class Gui extends JFrame implements ActionListener {
         if (Oracle.isConnectedToVPN && e.getSource() == scan_btn) {
             // анализ таблицы на уникальные значения по стобцам
             if (uniqueAnalysisModel.getColumnCount() > 0) uniqueAnalysisModel.setRowCount(0);
-            new Thread(Oracle::tableInfo).start();
-            new Thread(Oracle::selectUniqueItems).start();
+            new Thread(oracle::tableInfo).start();
+            new Thread(oracle::selectUniqueItems).start();
             new Thread(Gui::fill).start();
             progressBar.setForeground(Color.GREEN);
         } else if (e.getSource() == color_btn) {
             // выбор любого цвета
             Color color = JColorChooser.showDialog(null, "Color", Color.black);
             this.getContentPane().setBackground(color);
-            Themes.themeFontColors("Default");
+            themes.themeFontColors("Default");
         }
     }
 

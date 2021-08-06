@@ -20,8 +20,7 @@ import jxl.write.WriteException;
 public class ExportLogIntoExcel {
     public ExportLogIntoExcel() {
     }
-
-    public static void exportToExcel() {
+    public void exportToExcel() {
         try {
             FileNameExtensionFilter filter = new FileNameExtensionFilter("*.xls", "*.xls", "*.XLS", "*.*");
             JFileChooser save_to = new JFileChooser();
