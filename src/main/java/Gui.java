@@ -19,7 +19,7 @@ import javax.swing.table.*;
 public class Gui extends JFrame implements ActionListener {
     static JTable table;
     static DefaultTableModel model;
-    static JLabel JStatement = new JLabel("SELECT * FROM");
+    static JLabel JStatement = new JLabel("SELECT * FROM " + Oracle.logTableFromConfig);
     //    static JLabel JStatement_2 = new JLabel("AND fl_text LIKE");
 //    static JTextField likeTextField = new JTextField("'%sabre%'");
     static JTextField textWhereClause = new JTextField("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%sabre%'");

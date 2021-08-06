@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,8 +24,7 @@ import java.util.stream.Stream;
 
 public class Common extends Gui {
     static long trayTimeForMessage = 6000;
-    static String[] devProdValues = new String[countLines(Main.configPath) - 2];
-    static final String CYRILLIC_TO_LATIN = "Cyrillic-Latin";
+    static String[] devProdValues = new String[countLines(Main.configPath) - 5];
 
     // Считывание всех строк из файла в двумерный массив строк
     static String[][] getConfig() {
@@ -46,13 +46,29 @@ public class Common extends Gui {
 
     // Запись сред разработки в комбобокс
     static void addEnv(){
-        int rowsCount = countLines(Main.configPath) - 2;
+        int rowsCount = countLines(Main.configPath) - 5;
         String [][] config = getConfig();
 
         for (int i = 0; i < rowsCount; i++) {
-            devProdValues[i] = config[i + 2][0];
+            devProdValues[i] = config[i + 5][0];
         }
 
+    }
+
+    // Копирование файлов из jar
+    static void copyFiles(URL p_file, String copy_to) {
+        File copied = new File(copy_to);
+        try (InputStream in = p_file.openStream();
+             OutputStream out = new BufferedOutputStream(new FileOutputStream(copied))) {
+            byte[] buffer = new byte[1024];
+            int lengthRead;
+            while ((lengthRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, lengthRead);
+                out.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // статус выполнения программы

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Oracle {
-    static String logTableFromConfig;
     static AtomicBoolean isStop = new AtomicBoolean(false);
     static boolean isConnectedToVPN = false;
     static AtomicBoolean isSearchFinished;
@@ -29,32 +28,37 @@ public class Oracle {
     static Set<String> blobs = new LinkedHashSet<>();
     static ArrayList<String> row_ids = new ArrayList<>();
     static boolean isSelectOrGoFinished;
+    //config.txt
     static String[][] config = Common.getConfig();
-
+    static String driver = config[0][0];
+    static String logTableFromConfig = config[1][0].replace("log_table=", "");
+    static String column_id = config[2][0].replace("column_id=", "");
+    static String column_date = config[3][0].replace("column_date=", "");
+    static String column_text = config[4][0].replace("column_text=", "");
+            
     // открытие соединения
     static void open() {
         try {
-
-            int index = Gui.devProd.getSelectedIndex() + 2; // пропускаем строку с "oracle.jdbc.driver.OracleDriver" и с таблицей лога
-            Class.forName(config[0][0]);
+            int index = Gui.devProd.getSelectedIndex() + 5;
+            Class.forName(driver);
 
             //dev
-            if (index == 2) {
+            if (index == 5) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
                 //test
-            } else if (index == 3) {
+            } else if (index == 6) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
                 //prod
-            } else if (index == 4) {
+            } else if (index == 7) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
                 //akr
-            } else if (index == 5) {
+            } else if (index == 8) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
@@ -63,8 +67,6 @@ public class Oracle {
                 getUserTables();
                 Common.addItemsToCombobox();
                 Common.isTabInFavorites();
-                logTableFromConfig = config[1][0];
-                Gui.JStatement.setText("SELECT * FROM " + logTableFromConfig);
             }
         } catch (Exception e) {
             Common.notification("check VPN or input correct password");
@@ -93,7 +95,7 @@ public class Oracle {
                     Common.notification("auto update data");
                     Statement statement = connect.createStatement();
                     //String sql = "select max(fl_id) from fs_log where fl_date > sysdate - " + where_clause;
-                    String sql = "select max(" + config[1][1] + ") from " + logTableFromConfig + " where " + config[1][2] + " > sysdate - 1/1440";
+                    String sql = "select max(" + column_id + ") from " + logTableFromConfig + " where " + column_date + " > sysdate - 1/1440";
                     ResultSet rs_id = statement.executeQuery(sql);
                     if (rs_id.next()) {
                         max = rs_id.getInt(1);
@@ -109,7 +111,7 @@ public class Oracle {
 
                     Statement statement2 = connect.createStatement();
                     //String sql2 = "select max(fl_id) from fs_log where fl_date > sysdate - " + where_clause;
-                    String sql2 = "select max(" + config[1][1] + ") from " + logTableFromConfig + " where " + config[1][2] + " > sysdate - 1/1440";
+                    String sql2 = "select max(" + column_id + ") from " + logTableFromConfig + " where " + column_date + " > sysdate - 1/1440";
                     ResultSet rs_id2 = statement2.executeQuery(sql2);
                     if (rs_id2.next()) {
                         max2 = rs_id2.getInt(1);
@@ -127,9 +129,9 @@ public class Oracle {
                                 return;
                             }
                             amount = Gui.model.getRowCount();
-                            String fl_date = rs.getString(config[1][2]);
-                            String fl_text = rs.getString(config[1][3]);
-                            int fl_id = rs.getInt(config[1][1]);
+                            String fl_date = rs.getString(column_date);
+                            String fl_text = rs.getString(column_text);
+                            int fl_id = rs.getInt(column_id);
                             if (fl_id > max) {
                                 Object[] row = new Object[]{amount + 1, fl_date, fl_text};
                                 Gui.model.addRow(row);
@@ -155,8 +157,8 @@ public class Oracle {
                         }
 
                         amount = Gui.model.getRowCount() + 1;
-                        String fl_date = rs.getString(config[1][2]);
-                        String fl_text = rs.getString(config[1][3]);
+                        String fl_date = rs.getString(column_date);
+                        String fl_text = rs.getString(column_text);
                         Object[] row = new Object[]{amount, fl_date, fl_text};
                         Gui.model.addRow(row);
                     }

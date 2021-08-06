@@ -11,6 +11,7 @@ public class Main {
 
     // Создание файлов для избранного и лога
     static {
+
         File directory = new File(directoryPath);
         File fav_file = new File(favoritesTabPath);
         File log_file = new File(logPath);
@@ -21,6 +22,8 @@ public class Main {
             if (!fav_file.exists()) fav_file.createNewFile();
             if (!log_file.exists()) log_file.createNewFile();
             if (!config_file.exists()) config_file.createNewFile();
+
+
 
             // запись лога в файл
             Handler handler = new FileHandler(logPath, true);
