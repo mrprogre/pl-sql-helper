@@ -1,4 +1,4 @@
-# PL/SQL helper ()
+# PL/SQL helper
 
 The program is made for ease of development in PL / SQL developer, namely to view the log
 and catching the required variables online. Also added functionality for working with all tables in the database.
