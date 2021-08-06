@@ -22,4 +22,4 @@
 15) в поле iata можно ввести код аэропорта из 3 букв (к примеру lax) и получить информацию о нём, нажав enter. 
 Также подключен конвертер дфч в lax, если забыли сменить раскладку клавиатуры.
 
-![Image alt](https://github.com/mrprogre/log/blob/master/gui.png)
+![Image alt](https://github.com/mrprogre/PL-SQL-Helper/blob/master/gui.png)
