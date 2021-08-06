@@ -20,7 +20,7 @@ public class Gui extends JFrame implements ActionListener {
     static JTable table;
     static DefaultTableModel model;
     static JLabel JStatement = new JLabel("SELECT * FROM fs_log ");
-//    static JLabel JStatement_2 = new JLabel("AND fl_text LIKE");
+    //    static JLabel JStatement_2 = new JLabel("AND fl_text LIKE");
 //    static JTextField likeTextField = new JTextField("'%sabre%'");
     static JTextField textWhereClause = new JTextField("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%sabre%'");
     static JTextField iataCodeTxt;
@@ -169,27 +169,27 @@ public class Gui extends JFrame implements ActionListener {
             //test
             if (Gui.devProd.getSelectedIndex() == 1) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                                          "AND fl_text LIKE '%шибк%' " +
-                                          "AND fl_text not like '%отправк%' " +
-                                          "AND fl_text not like '%остоянн%'");
+                        "AND fl_text LIKE '%шибк%' " +
+                        "AND fl_text not like '%отправк%' " +
+                        "AND fl_text not like '%остоянн%'");
                 this.getContentPane().setBackground(new Color(0x789FBB));
                 Themes.themeFontColors("Gray");
                 //prod
             } else if (Gui.devProd.getSelectedIndex() == 2) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                                        "AND fl_text LIKE '%шибк%'");
+                        "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xF9ABAB));
                 Themes.themeFontColors("Pink");
                 //akr
             } else if (Gui.devProd.getSelectedIndex() == 3) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                                        "AND fl_text LIKE '%шибк%'");
+                        "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xADE9B4));
                 Themes.themeFontColors("Green");
                 //dev
             } else {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                                        "AND fl_text LIKE '%sabre%'");
+                        "AND fl_text LIKE '%sabre%'");
                 this.getContentPane().setBackground(new Color(0x789FBB));
                 Themes.themeFontColors("Gray");
 
@@ -351,8 +351,14 @@ public class Gui extends JFrame implements ActionListener {
         selectBtn.setBounds(731, 6, 50, 22);
         selectBtn.setBackground(new Color(199, 236, 255));
         this.getContentPane().add(selectBtn);
-        //Listener
         selectBtn.addActionListener((e) -> {
+            // получить имя нажатой кнопки
+//            String command = e.getActionCommand();
+//            System.out.println(command);
+//            if ("button_name".equals(command)) {
+//                System.out.println(1212121);
+//            }
+
             Oracle.isStop.set(false);
             statusLbl.setText("");
             if (model.getColumnCount() > 0) model.setRowCount(0);
@@ -831,7 +837,7 @@ public class Gui extends JFrame implements ActionListener {
                             executeTable.getColumnModel().getColumn(i).setCellEditor(new ButtonEditor(new JCheckBox()));
                             break;
                         default:
-                            if (charLength > 0 && charLength < 10 ) {
+                            if (charLength > 0 && charLength < 10) {
                                 executeTable.getColumnModel().getColumn(i).setPreferredWidth((charLength) * 6 + 50);
                             } else if (charLength == 0) {
                                 executeTable.getColumnModel().getColumn(i).setPreferredWidth(60);
