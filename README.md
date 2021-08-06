@@ -13,7 +13,7 @@ Features of the program:
 5) button for opening / closing additional functionality (paragraphs 6-13)
 6) added combobox with a list of user tables in the current development environment
 7) analysis of the selected table in the combobox by the "Go" button (column name, column type,
-the number of unique values ​​in a column (at the time of the request), selectivity)
+the number of unique values in a column (at the time of the request), selectivity)
 8) the ability to add / remove selected tables (each environment has its own selected tables)
 9) the ability to view only selected tables by activating the "Favorite tables" checkbox
 10) it is possible to export blob / clob files with autodetection of the file format. If blob / clob is empty, then minus sign is displayed
@@ -24,7 +24,7 @@ the number of unique values ​​in a column (at the time of the request), sele
 15) in the iata field, you can enter the airport code of 3 letters (for example lax) and get information about it by pressing enter.
 A dfch to lax converter is also connected, if you forgot to change the keyboard layout.
 
-![Image alt](https://github.com/mrprogre/PL-SQL-Helper/blob/master/gui.png)
+![Image alt](https://github.com/mrprogre/PL-SQL-Helper/blob/master/GUI.png)
 
 ---
 Программа сделана для удобства разработки в PL/SQL developer, а именно для просмотра лога 
