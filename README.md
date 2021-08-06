@@ -3,6 +3,7 @@
 The program is made for ease of development in PL / SQL developer, namely to view the log
 and catching the required variables online. Also added functionality for working with all tables in the database.
 
+---
 Features of the program:
 1) you can add 4 development environments by clicking on the "+" sign (fast switching between environments)
 2) it is possible to automatically update the log data in the main table when the "auto" checkbox is enabled
