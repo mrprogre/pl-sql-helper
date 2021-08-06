@@ -1,5 +1,6 @@
 # PL/SQL helper
 
+---
 The program is made for ease of development in PL / SQL developer, namely to view the log
 and catching the required variables online. Also added functionality for working with all tables in the database.
 
@@ -25,6 +26,7 @@ A dfch to lax converter is also connected, if you forgot to change the keyboard 
 
 ![Image alt](https://github.com/mrprogre/PL-SQL-Helper/blob/master/gui.png)
 
+---
 Программа сделана для удобства разработки в PL/SQL developer, а именно для просмотра лога 
 и отлавливания нужных переменных в режиме онлайн. Также добавлен функционал для работы со всеми таблицами в базе данных.
 
