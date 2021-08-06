@@ -19,7 +19,7 @@ import javax.swing.table.*;
 public class Gui extends JFrame implements ActionListener {
     static JTable table;
     static DefaultTableModel model;
-    static JLabel JStatement = new JLabel("SELECT * FROM fs_log ");
+    static JLabel JStatement = new JLabel("SELECT * FROM");
     //    static JLabel JStatement_2 = new JLabel("AND fl_text LIKE");
 //    static JTextField likeTextField = new JTextField("'%sabre%'");
     static JTextField textWhereClause = new JTextField("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%sabre%'");
@@ -463,7 +463,7 @@ public class Gui extends JFrame implements ActionListener {
         // Iata label
         iataLbl = new JLabel("iata:");
         iataLbl.setFont(new Font("Tahoma", Font.BOLD, 12));
-        iataLbl.setBounds(116, 36, 67, 20);
+        iataLbl.setBounds(120, 35, 67, 20);
         iataLbl.setForeground(fontColor);
         getContentPane().add(iataLbl);
 

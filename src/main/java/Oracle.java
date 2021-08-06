@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Oracle {
+    static String logTableFromConfig;
     static AtomicBoolean isStop = new AtomicBoolean(false);
     static boolean isConnectedToVPN = false;
     static AtomicBoolean isSearchFinished;
@@ -28,31 +29,32 @@ public class Oracle {
     static Set<String> blobs = new LinkedHashSet<>();
     static ArrayList<String> row_ids = new ArrayList<>();
     static boolean isSelectOrGoFinished;
+    static String[][] config = Common.getConfig();
 
     // открытие соединения
     static void open() {
         try {
-            String[][] config = Common.getConfig();
-            int index = Gui.devProd.getSelectedIndex() + 1; // пропускаем строку с "oracle.jdbc.driver.OracleDriver"
+
+            int index = Gui.devProd.getSelectedIndex() + 2; // пропускаем строку с "oracle.jdbc.driver.OracleDriver" и с таблицей лога
             Class.forName(config[0][0]);
 
             //dev
-            if (index == 1) {
+            if (index == 2) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
                 //test
-            } else if (index == 2) {
-                connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
-                Common.notification("connected to " + config[index][0].toUpperCase());
-                isConnectedToVPN = true;
-                //prod
             } else if (index == 3) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
-                //akr
+                //prod
             } else if (index == 4) {
+                connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
+                Common.notification("connected to " + config[index][0].toUpperCase());
+                isConnectedToVPN = true;
+                //akr
+            } else if (index == 5) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
@@ -61,6 +63,8 @@ public class Oracle {
                 getUserTables();
                 Common.addItemsToCombobox();
                 Common.isTabInFavorites();
+                logTableFromConfig = config[1][0];
+                Gui.JStatement.setText("SELECT * FROM " + logTableFromConfig);
             }
         } catch (Exception e) {
             Common.notification("check VPN or input correct password");
@@ -89,7 +93,7 @@ public class Oracle {
                     Common.notification("auto update data");
                     Statement statement = connect.createStatement();
                     //String sql = "select max(fl_id) from fs_log where fl_date > sysdate - " + where_clause;
-                    String sql = "select max(fl_id) from fs_log where fl_date > sysdate - 1/1440";
+                    String sql = "select max(" + config[1][1] + ") from " + logTableFromConfig + " where " + config[1][2] + " > sysdate - 1/1440";
                     ResultSet rs_id = statement.executeQuery(sql);
                     if (rs_id.next()) {
                         max = rs_id.getInt(1);
@@ -105,7 +109,7 @@ public class Oracle {
 
                     Statement statement2 = connect.createStatement();
                     //String sql2 = "select max(fl_id) from fs_log where fl_date > sysdate - " + where_clause;
-                    String sql2 = "select max(fl_id) from fs_log where fl_date > sysdate - 1/1440";
+                    String sql2 = "select max(" + config[1][1] + ") from " + logTableFromConfig + " where " + config[1][2] + " > sysdate - 1/1440";
                     ResultSet rs_id2 = statement2.executeQuery(sql2);
                     if (rs_id2.next()) {
                         max2 = rs_id2.getInt(1);
@@ -113,7 +117,7 @@ public class Oracle {
 
                     statement2.close();
                     if (max != max2) {
-                        String sqlQuery = Gui.JStatement.getText() + Gui.textWhereClause.getText();
+                        String sqlQuery = Gui.JStatement.getText() + " " + logTableFromConfig + " " + Gui.textWhereClause.getText();
                         //System.out.println("1 " + sqlQuery);
                         PreparedStatement st = connect.prepareStatement(sqlQuery);
                         ResultSet rs = st.executeQuery();
@@ -123,9 +127,9 @@ public class Oracle {
                                 return;
                             }
                             amount = Gui.model.getRowCount();
-                            String fl_date = rs.getString("fl_date");
-                            String fl_text = rs.getString("fl_text");
-                            int fl_id = rs.getInt("fl_id");
+                            String fl_date = rs.getString(config[1][2]);
+                            String fl_text = rs.getString(config[1][3]);
+                            int fl_id = rs.getInt(config[1][1]);
                             if (fl_id > max) {
                                 Object[] row = new Object[]{amount + 1, fl_date, fl_text};
                                 Gui.model.addRow(row);
@@ -140,7 +144,7 @@ public class Oracle {
                     }
                 } else {
                     Common.Searching(isSearchFinished);
-                    String sqlQuery = Gui.JStatement.getText() + Gui.textWhereClause.getText();
+                    String sqlQuery = Gui.JStatement.getText() + " " + logTableFromConfig + " " + Gui.textWhereClause.getText();
                     PreparedStatement st = connect.prepareStatement(sqlQuery);
                     //System.out.println("2 " + sqlQuery);
                     ResultSet rs = st.executeQuery();
@@ -151,8 +155,8 @@ public class Oracle {
                         }
 
                         amount = Gui.model.getRowCount() + 1;
-                        String fl_date = rs.getString("fl_date");
-                        String fl_text = rs.getString("fl_text");
+                        String fl_date = rs.getString(config[1][2]);
+                        String fl_text = rs.getString(config[1][3]);
                         Object[] row = new Object[]{amount, fl_date, fl_text};
                         Gui.model.addRow(row);
                     }

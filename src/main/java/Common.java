@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public class Common extends Gui {
     static long trayTimeForMessage = 6000;
-    static String[] devProdValues = new String[countLines(Main.configPath) - 1];
+    static String[] devProdValues = new String[countLines(Main.configPath) - 2];
     static final String CYRILLIC_TO_LATIN = "Cyrillic-Latin";
 
     // Считывание всех строк из файла в двумерный массив строк
@@ -46,15 +46,11 @@ public class Common extends Gui {
 
     // Запись сред разработки в комбобокс
     static void addEnv(){
-        int rowsCount = countLines(Main.configPath) - 1;
+        int rowsCount = countLines(Main.configPath) - 2;
         String [][] config = getConfig();
 
-        // Среды разработки для комбобокса
-//        for (int i = 0; i < rowsCount - 1; i++) {
-//            devProdValues[i] = config[i][0];
-//        }
         for (int i = 0; i < rowsCount; i++) {
-            devProdValues[i] = config[i + 1][0];
+            devProdValues[i] = config[i + 2][0];
         }
 
     }
