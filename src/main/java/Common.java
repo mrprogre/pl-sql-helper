@@ -1,6 +1,8 @@
 import org.apache.tika.Tika;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -240,24 +242,28 @@ public class Common extends Gui {
             String mime_type_full = tika.detect(is_blob);
 
             String mimeType = null;
-            if (mime_type_full.contains("image/")) mimeType = mime_type_full.replace("image/", "");
-            if (mime_type_full.contains("application/")) mimeType = mime_type_full.replace("application/", "");
-            if (mime_type_full.contains("text/")) mimeType = mime_type_full.replace("text/", "");
-            if (mime_type_full.contains("audio/")) mimeType = mime_type_full.replace("audio/", "");
-            if (mime_type_full.contains("video/")) mimeType = mime_type_full.replace("video/", "");
+            if (mime_type_full.contains("image/"))
+                mimeType = mime_type_full.replace("image/", "");
+            if (mime_type_full.contains("application/"))
+                mimeType = mime_type_full.replace("application/", "");
+            if (mime_type_full.contains("text/"))
+                mimeType = mime_type_full.replace("text/", "");
+            if (mime_type_full.contains("audio/"))
+                mimeType = mime_type_full.replace("audio/", "");
+            if (mime_type_full.contains("video/"))
+                mimeType = mime_type_full.replace("video/", "");
 
+            // TODO сделать чтобы определялся word
             switch (Objects.requireNonNull(mimeType)) {
                 case "x-tika-ooxml":
-                    mimeType = "xlsx";
-                    break;
-                case "x-tika-msoffice":
-                    mimeType = "xls";
+                    mimeType = "xlsx"; // + doc
                     break;
                 case "octet-stream":
                 case "plain":
                     mimeType = "txt";
                     break;
             }
+
             FileOutputStream fos = new FileOutputStream(p_file_path + "." + mimeType);
 
             int b;
@@ -272,25 +278,32 @@ public class Common extends Gui {
     }
 
     // Скачивание CLOB файла
-    static void getBlobFromTable(String p_file_path, Clob p_clob) {
+    static void getClobFromTable(String p_file_path, Clob p_clob) {
         try {
+            if (p_clob.length() <= 0) return;
             InputStream is_clob = p_clob.getAsciiStream();
+
             Tika tika = new Tika();
             String mime_type_full = tika.detect(is_clob);
 
             String mimeType = null;
-            if (mime_type_full.contains("image/")) mimeType = mime_type_full.replace("image/", "");
-            if (mime_type_full.contains("application/")) mimeType = mime_type_full.replace("application/", "");
-            if (mime_type_full.contains("text/")) mimeType = mime_type_full.replace("text/", "");
-            if (mime_type_full.contains("audio/")) mimeType = mime_type_full.replace("audio/", "");
-            if (mime_type_full.contains("video/")) mimeType = mime_type_full.replace("video/", "");
+            if (mime_type_full.contains("image/"))
+                mimeType = mime_type_full.replace("image/", "");
+            if (mime_type_full.contains("application/"))
+                mimeType = mime_type_full.replace("application/", "");
+            if (mime_type_full.contains("text/"))
+                mimeType = mime_type_full.replace("text/", "");
+            if (mime_type_full.contains("audio/"))
+                mimeType = mime_type_full.replace("audio/", "");
+            if (mime_type_full.contains("video/"))
+                mimeType = mime_type_full.replace("video/", "");
 
             switch (Objects.requireNonNull(mimeType)) {
                 case "x-tika-ooxml":
                     mimeType = "xlsx";
                     break;
                 case "x-tika-msoffice":
-                    mimeType = "xls";
+                    mimeType = "doc";
                     break;
                 case "octet-stream":
                 case "plain":
@@ -313,8 +326,8 @@ public class Common extends Gui {
             }
             breader.close();
             file_writer.close();
-        } catch (SQLException | IOException exc) {
-            exc.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

@@ -103,7 +103,7 @@ public class Gui extends JFrame implements ActionListener {
         this.setResizable(false);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(255, 235, 235));
-        this.setTitle("PL/SQL monitor");
+        this.setTitle("PL/SQL helper");
         this.setFont(new Font("Tahoma", Font.PLAIN, 14));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setBounds(guiWindowX, guiWindowY, guiWindowWidth, guiWindowHeight);

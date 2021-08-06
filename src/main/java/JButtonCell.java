@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -53,7 +55,7 @@ class ButtonEditor extends DefaultCellEditor {
         label = (value == null) ? "" : value.toString();
         //button.setText(label);
         button.setText("");
-        button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("res/icons/apply.png"))));
+        button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("icons/apply.png"))));
         isPushed = true;
         return button;
     }
@@ -82,11 +84,11 @@ class ButtonEditor extends DefaultCellEditor {
                         switch (Oracle.types.get(Gui.executeTable.getSelectedColumn())) {
                             case "BLOB":
                                 Blob blob = rs.getBlob(v_header);
-                                Common.getBlobFromTable(file_absolute_path, blob);
+                                if (blob.length() > 0) Common.getBlobFromTable(file_absolute_path, blob);
                                 break;
                             case "CLOB":
                                 Clob clob = rs.getClob(v_header);
-                                Common.getBlobFromTable(file_absolute_path, clob);
+                                if (clob.length() > 0) Common.getClobFromTable(file_absolute_path, clob);
                                 break;
                         }
                     }
