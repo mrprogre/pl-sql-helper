@@ -86,7 +86,6 @@ public class Oracle {
     // выборка данных из лога
     void select() {
         int modelRowCount = Gui.model.getRowCount();
-
         try {
             if (isConnectedToVPN) {
                 timeStart = (double) System.currentTimeMillis();
