@@ -23,8 +23,6 @@ public class Gui extends JFrame implements ActionListener {
     static JTable table;
     static DefaultTableModel model;
     static JLabel JStatement = new JLabel("SELECT * FROM " + Oracle.logTableFromConfig);
-    //    static JLabel JStatement_2 = new JLabel("AND fl_text LIKE");
-//    static JTextField likeTextField = new JTextField("'%sabre%'");
     static JTextField textWhereClause = new JTextField("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%sabre%'");
     static JTextField iataCodeTxt;
     static JLabel statusLbl;
@@ -66,10 +64,10 @@ public class Gui extends JFrame implements ActionListener {
     static JButton connectionBtn;
     static JButton logBtn;
     static JProgressBar progressBar;
-    static int guiWindowHeight = 388;
-    static int guiWindowWidth = 987;
-    static int guiWindowX;
-    static int guiWindowY;
+    private final int guiWindowHeight = 388;
+    private final int guiWindowWidth = 987;
+    private int guiWindowX;
+    private int guiWindowY;
     static AtomicBoolean isGuiInTray = new AtomicBoolean(false);
 
     public Gui() {
