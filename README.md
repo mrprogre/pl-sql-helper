@@ -24,7 +24,7 @@ the number of unique values in a column (at the time of the request), selectivit
 15) in the iata field, you can enter the airport code of 3 letters (for example lax) and get information about it by pressing enter.
 A dfch to lax converter is also connected, if you forgot to change the keyboard layout.
 
-![Image alt](https://github.com/mrprogre/PL-SQL-Helper/blob/master/GUI.png)
+![Image alt](https://github.com/mrprogre/PL-SQL-Helper/blob/master/gui.png)
 
 ---
 Программа сделана для удобства разработки в PL/SQL developer, а именно для просмотра лога 
