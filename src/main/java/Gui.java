@@ -168,8 +168,10 @@ public class Gui extends JFrame implements ActionListener {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            int index = Gui.devProd.getSelectedIndex();
+
             //test
-            if (Gui.devProd.getSelectedIndex() == 1) {
+            if (index == 1) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
                         "AND fl_text LIKE '%шибк%' " +
                         "AND fl_text not like '%отправк%' " +
@@ -177,13 +179,13 @@ public class Gui extends JFrame implements ActionListener {
                 this.getContentPane().setBackground(new Color(0x789FBB));
                 themes.themeFontColors("Gray");
                 //prod
-            } else if (Gui.devProd.getSelectedIndex() == 2) {
+            } else if (index == 2) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
                         "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xF9ABAB));
                 themes.themeFontColors("Pink");
                 //akr
-            } else if (Gui.devProd.getSelectedIndex() == 3) {
+            } else if (index == 3) {
                 textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
                         "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xADE9B4));
@@ -194,7 +196,6 @@ public class Gui extends JFrame implements ActionListener {
                         "AND fl_text LIKE '%sabre%'");
                 this.getContentPane().setBackground(new Color(0x789FBB));
                 themes.themeFontColors("Gray");
-
             }
 
             if (Oracle.isConnectedToVPN) {
@@ -205,6 +206,7 @@ public class Gui extends JFrame implements ActionListener {
                 oracle.close();
             }
             favouriteTabCheckBox.setState(false);
+            Common.notification("");
         });
 
         // Themes list
