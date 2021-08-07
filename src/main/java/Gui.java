@@ -172,30 +172,16 @@ public class Gui extends JFrame implements ActionListener {
 
             //test
             if (index == 1) {
-                textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                        "AND fl_text LIKE '%шибк%' " +
-                        "AND fl_text not like '%отправк%' " +
-                        "AND fl_text not like '%остоянн%'");
                 this.getContentPane().setBackground(new Color(0x789FBB));
-                themes.themeFontColors("Gray");
-                //prod
+            //prod
             } else if (index == 2) {
-                textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                        "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xF9ABAB));
-                themes.themeFontColors("Pink");
-                //akr
+            //akr
             } else if (index == 3) {
-                textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                        "AND fl_text LIKE '%шибк%'");
                 this.getContentPane().setBackground(new Color(0xADE9B4));
-                themes.themeFontColors("Green");
-                //dev
+            //dev
             } else {
-                textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
-                        "AND fl_text LIKE '%sabre%'");
                 this.getContentPane().setBackground(new Color(0x789FBB));
-                themes.themeFontColors("Gray");
             }
 
             if (Oracle.isConnectedToVPN) {
@@ -326,19 +312,6 @@ public class Gui extends JFrame implements ActionListener {
         textWhereClause.setFont(new Font("Tahoma", Font.BOLD, 12));
         this.getContentPane().add(textWhereClause);
 
-        /*
-        // Statement 2
-        JStatement_2.setFont(fontStyle);
-        JStatement_2.setForeground(fontColor);
-        JStatement_2.setBounds(394, 7, 127, 20);
-        getContentPane().add(JStatement_2);
-
-        // Like Clause
-        likeTextField.setFont(new Font("Tahoma", Font.BOLD, 11));
-        likeTextField.setBounds(503, 7, 217, 20);
-        getContentPane().add(likeTextField);
-        likeTextField.setColumns(10);
-*/
         // Platform
         devProd = new JComboBox<>();
         devProd.setBounds(22, 36, 57, 20);
@@ -356,13 +329,6 @@ public class Gui extends JFrame implements ActionListener {
         selectBtn.setBackground(new Color(199, 236, 255));
         this.getContentPane().add(selectBtn);
         selectBtn.addActionListener((e) -> {
-            // получить имя нажатой кнопки
-//            String command = e.getActionCommand();
-//            System.out.println(command);
-//            if ("button_name".equals(command)) {
-//                System.out.println(1212121);
-//            }
-
             Oracle.isStop.set(false);
             statusLbl.setText("");
             if (model.getColumnCount() > 0) model.setRowCount(0);

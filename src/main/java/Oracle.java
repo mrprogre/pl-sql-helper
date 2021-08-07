@@ -31,12 +31,12 @@ public class Oracle {
     String data_type;
     //config.txt
     private final static String[][] config = Common.getConfig();
-    private final String driver            = config[0][0];
+    private final String driver = config[0][0];
     static final String logTableFromConfig = config[1][0].replace("log_table=", "");
-    private final String column_id         = config[2][0].replace("column_id=", "");
-    private final String column_date       = config[3][0].replace("column_date=", "");
-    private final String column_text       = config[4][0].replace("column_text=", "");
-            
+    private final String column_id = config[2][0].replace("column_id=", "");
+    private final String column_date = config[3][0].replace("column_date=", "");
+    private final String column_text = config[4][0].replace("column_text=", "");
+
     // открытие соединения
     void open() {
         try {
@@ -48,21 +48,28 @@ public class Oracle {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
+                Gui.textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%sabre%'");
                 //test
             } else if (index == 6) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
+                Gui.textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 " +
+                        "AND fl_text LIKE '%шибк%' " +
+                        "AND fl_text not like '%отправк%' " +
+                        "AND fl_text not like '%остоянн%'");
                 //prod
             } else if (index == 7) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
+                Gui.textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%шибк%'");
                 //akr
             } else if (index == 8) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
+                Gui.textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%шибк%'");
             }
             if (isConnectedToVPN) {
                 getUserTables();
