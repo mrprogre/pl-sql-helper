@@ -1,9 +1,12 @@
 import org.apache.tika.Tika;
+import org.apache.tika.mime.MediaType;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusListener;
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -243,43 +246,30 @@ public class Common {
     }
 
     // Скачивание BLOB файла
-    static void getBlobFromTable(String p_file_path, Blob p_plob) {
+    static void getBlobFromTable(String pFilePath, Blob pBlob) {
         try {
-            InputStream is_blob = p_plob.getBinaryStream();
+            InputStream isBlob = pBlob.getBinaryStream();
 
             Tika tika = new Tika();
-            String mime_type_full = tika.detect(is_blob);
-
-            String mimeType = null;
-            if (mime_type_full.contains("image/"))
-                mimeType = mime_type_full.replace("image/", "");
-            if (mime_type_full.contains("application/"))
-                mimeType = mime_type_full.replace("application/", "");
-            if (mime_type_full.contains("text/"))
-                mimeType = mime_type_full.replace("text/", "");
-            if (mime_type_full.contains("audio/"))
-                mimeType = mime_type_full.replace("audio/", "");
-            if (mime_type_full.contains("video/"))
-                mimeType = mime_type_full.replace("video/", "");
+            MediaType mediaType = MediaType.parse(tika.detect(isBlob));
+            String mimeType = mediaType.getSubtype();
 
             // TODO сделать чтобы определялся word
             switch (Objects.requireNonNull(mimeType)) {
                 case "x-tika-ooxml":
-                    mimeType = "xlsx"; // + doc
+                    mimeType = "xlsx"; // doc
                     break;
                 case "octet-stream":
                 case "plain":
                     mimeType = "txt";
                     break;
             }
-
-            FileOutputStream fos = new FileOutputStream(p_file_path + "." + mimeType);
-
+            FileOutputStream fos = new FileOutputStream(pFilePath + "." + mimeType);
             int b;
-            while ((b = is_blob.read()) != -1) {
+            while ((b = isBlob.read()) != -1) {
                 fos.write(b);
             }
-            is_blob.close();
+            isBlob.close();
             fos.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,10 +277,10 @@ public class Common {
     }
 
     // Скачивание CLOB файла
-    static void getClobFromTable(String p_file_path, Clob p_clob) {
+    static void getClobFromTable(String pFilePath, Clob pClob) {
         try {
-            if (p_clob.length() <= 0) return;
-            InputStream is_clob = p_clob.getAsciiStream();
+            if (pClob.length() <= 0) return;
+            InputStream is_clob = pClob.getAsciiStream();
 
             Tika tika = new Tika();
             String mime_type_full = tika.detect(is_clob);
@@ -319,12 +309,11 @@ public class Common {
                     mimeType = "txt";
                     break;
             }
-            System.out.println(mimeType);
 
-            BufferedWriter file_writer = new BufferedWriter(new FileWriter(p_file_path + "." + mimeType));
+            BufferedWriter file_writer = new BufferedWriter(new FileWriter(pFilePath + "." + mimeType));
             BufferedReader breader;
             final int BUFFER_SIZE = 4096;
-            breader = new BufferedReader(p_clob.getCharacterStream());
+            breader = new BufferedReader(pClob.getCharacterStream());
             int length;
             char[] buf = new char[BUFFER_SIZE];
 
