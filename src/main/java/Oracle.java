@@ -30,12 +30,12 @@ public class Oracle {
     int data_type_count;
     String data_type;
     //config.txt
-    static String[][] config = Common.getConfig();
-    String driver = config[0][0];
-    static String logTableFromConfig = config[1][0].replace("log_table=", "");
-    String column_id = config[2][0].replace("column_id=", "");
-    String column_date = config[3][0].replace("column_date=", "");
-    String column_text = config[4][0].replace("column_text=", "");
+    private final static String[][] config = Common.getConfig();
+    private final String driver            = config[0][0];
+    static final String logTableFromConfig = config[1][0].replace("log_table=", "");
+    private final String column_id         = config[2][0].replace("column_id=", "");
+    private final String column_date       = config[3][0].replace("column_date=", "");
+    private final String column_text       = config[4][0].replace("column_text=", "");
             
     // открытие соединения
     void open() {
@@ -309,12 +309,12 @@ public class Oracle {
                                     if (rs.getBlob(x + 1) == null) {
                                         return "-";
                                     }
-                                    return "+";
+                                    return "blob";
                                 case "CLOB":
                                     if (rs.getClob(x + 1) == null) {
                                         return "-";
                                     }
-                                    return "+";
+                                    return "clob";
                                 default:
                                     return rs.getString(x + 1);
                             }
