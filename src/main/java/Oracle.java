@@ -63,7 +63,7 @@ public class Oracle {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
                 Common.notification("connected to " + config[index][0].toUpperCase());
                 isConnectedToVPN = true;
-                Gui.textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 AND fl_text LIKE '%шибк%'");
+                Gui.textWhereClause.setText("WHERE fl_date > SYSDATE - 1/1440 AND (fl_text LIKE '%шибк%' OR fl_text LIKE '%DEBUG%')");
                 //akr
             } else if (index == 8) {
                 connect = DriverManager.getConnection(config[index][1].trim(), config[index][2], config[index][3]);
